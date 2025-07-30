@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratorio Sudamericano</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Pantalla de Autenticación -->
+    <div id="authScreen" class="auth-screen">
+        <div class="auth-container">
+            <div id="loginForm" class="auth-form">
+                <h2><i class="fa-solid fa-user-astronaut"></i> Acceso al Laboratorio</h2>
+                <input type="text" id="loginUsername" placeholder="Nombre de Científico" required>
+                <input type="password" id="loginPassword" placeholder="Clave de Acceso" required>
+                <button id="loginBtn" class="auth-btn">Ingresar</button>
+                <p>¿Nuevo en el laboratorio? <a href="#" id="showRegister">Crea tus credenciales</a></p>
+            </div>
+            <div id="registerForm" class="auth-form" style="display: none;">
+                <h2><i class="fa-solid fa-user-plus"></i> Protocolo de Registro</h2>
+                <input type="text" id="registerUsername" placeholder="Define tu Nombre de Científico" required>
+                <input type="password" id="registerPassword" placeholder="Establece tu Clave de Acceso" required>
+                <button id="registerBtn" class="auth-btn">Registrarse</button>
+                <p>¿Ya tienes credenciales? <a href="#" id="showLogin">Vuelve a la pantalla de acceso</a></p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Contenedor Principal del Juego -->
+    <div id="gameWrapper" class="game-wrapper">
+        <main class="lab-area">
+            <header class="lab-header">
+                <div class="title-container">
+                    <h1><i class="fa-solid fa-flask-vial"></i> Laboratorio Sudamericano</h1>
+                    <div class="player-info">
+                        <span>Científico: <strong id="playerName"></strong></span>
+                        <button id="logoutBtn" class="control-btn" title="Cerrar Sesión"><i class="fa-solid fa-power-off"></i></button>
+                    </div>
+                </div>
+
+                <div class="missions-container">
+                    <h2><i class="fa-solid fa-satellite-dish"></i> Objetivos de Investigación</h2>
+                    <div id="challengeBoard" class="challenge-board">
+                        <!-- Los objetivos se generan con JavaScript -->
+                    </div>
+                </div>
+            </header>
+
+            <div id="elementsShelf" class="elements-shelf-container">
+                <div class="shelf-surface"></div>
+            </div>
+
+            <div class="mix-station">
+                <div id="slot1" class="reaction-slot" data-slot="1"><span class="slot-placeholder">+</span></div>
+                <div id="mixFlask" class="mix-flask">
+                    <!-- SVG del Matraz Erlenmeyer Detallado -->
+                    <svg class="flask-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+                                <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur" />
+                                <feMerge> <feMergeNode in="blur" /> <feMergeNode in="SourceGraphic" /> </feMerge>
+                            </filter>
+                        </defs>
+                        <path id="flask-outline" d="M 40 5 L 60 5 L 60 35 L 85 95 L 15 95 L 40 35 Z" stroke="var(--cyan)" stroke-width="3" fill="none" filter="url(#neon-glow)" />
+                        <!-- Graduaciones -->
+                        <line x1="25" y1="85" x2="35" y2="85" stroke="var(--cyan)" stroke-width="1.5"/>
+                        <line x1="28" y1="75" x2="35" y2="75" stroke="var(--cyan)" stroke-width="1.5"/>
+                        <line x1="31" y1="65" x2="35" y2="65" stroke="var(--cyan)" stroke-width="1.5"/>
+                        <!-- Brillo -->
+                        <path d="M 45 15 C 50 30, 50 50, 45 70" stroke="rgba(255,255,255,0.3)" stroke-width="3" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    <div id="flaskLiquid" class="flask-liquid"></div>
+                    <div id="resultEmoji" class="result-emoji"></div>
+                </div>
+                <div id="slot2" class="reaction-slot" data-slot="2"><span class="slot-placeholder">+</span></div>
+            </div>
+            
+            <div class="game-controls">
+                <button id="resetBtn" class="control-btn" title="Reiniciar Progreso"><i class="fa-solid fa-trash-can"></i></button>
+                <button id="soundBtn" class="control-btn" title="Sonido Ambiente"><i id="soundIcon" class="fa-solid fa-volume-high"></i></button>
+            </div>
+        </main>
+
+        <aside class="sidebar">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="discoveries"><i class="fa-solid fa-book-journal-whills"></i> Códice</button>
+                <button class="tab-btn" data-tab="leaderboard"><i class="fa-solid fa-trophy"></i> Salón de la Fama</button>
+            </div>
+
+            <div id="discoveriesContent" class="tab-content active">
+                <div class="discoveries-header">
+                    <div id="progressCounter" class="progress-counter">0/0</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="progressFill" class="progress-bar-fill"></div>
+                </div>
+                <div id="discoveriesList" class="discoveries-list"></div>
+            </div>
+            
+            <div id="leaderboardContent" class="tab-content">
+                <div id="leaderboardList" class="discoveries-list"></div>
+            </div>
+        </aside>
+    </div>
+    
+    <!-- Sonidos -->
+    <audio id="soundAmbient" src="sounds/ambient.mp3" loop></audio>
+    <audio id="soundDrag" src="sounds/drag.mp3"></audio>
+    <audio id="soundDrop" src="sounds/drop.mp3"></audio>
+    <audio id="soundSuccess" src="sounds/success.mp3"></audio>
+    <audio id="soundError" src="sounds/error.mp3"></audio>
+    <audio id="soundDiscovery" src="sounds/discovery.mp3"></audio>
+    <audio id="soundMissionComplete" src="sounds/mission_complete.mp3"></audio>
+    <audio id="soundHover" src="sounds/hover.mp3"></audio>
+    <audio id="soundNewRecord" src="sounds/new_record.mp3"></audio>
+    
+    <!-- Sonidos por Categoría -->
+    <audio id="soundLiquid" src="sounds/liquid.mp3"></audio>
+    <audio id="soundFiery" src="sounds/fiery.mp3"></audio>
+    <audio id="soundEarthy" src="sounds/earthy.mp3"></audio>
+    <audio id="soundGaseous" src="sounds/gaseous.mp3"></audio>
+    <audio id="soundMetallic" src="sounds/metallic.mp3"></audio>
+    <audio id="soundOrganic" src="sounds/organic.mp3"></audio>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
